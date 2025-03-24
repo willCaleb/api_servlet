@@ -2,13 +2,14 @@ package org.example.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.example.IgnoreField;
 
 import javax.persistence.*;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "endereco_con")
+@Table(name = "address")
 public class Address extends AbstractEntity{
 
     @Id
@@ -16,14 +17,19 @@ public class Address extends AbstractEntity{
     @SequenceGenerator(name = "id_endereco", sequenceName = "gen_id_endereco", allocationSize = 1)
     private Integer id;
 
-    private String rua;
+    private String streetName;
 
-    private String numero;
+    private String number;
 
-    private String complemento;
+    private String complementaryInformation;
 
+    @IgnoreField
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_pessoa", referencedColumnName = "id")
     private People people;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_cidade", referencedColumnName = "id")
+    private City city;
 
 }

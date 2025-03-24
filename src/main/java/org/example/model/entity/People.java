@@ -10,7 +10,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name = "teste_teste")
+@Table(name = "people")
 public class People extends AbstractEntity{
     
     @Id
@@ -21,7 +21,7 @@ public class People extends AbstractEntity{
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "pessoa", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "people", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Address> addresses;
 
 }
