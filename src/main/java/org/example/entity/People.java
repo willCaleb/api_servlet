@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "teste_teste")
-public class Pessoa extends AbstractEntity{
+public class People extends AbstractEntity{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "id_pessoa")
@@ -19,9 +19,9 @@ public class Pessoa extends AbstractEntity{
     private Integer id;
 
     @Column(nullable = false)
-    private String nome;
+    private String name;
 
     @OneToMany(mappedBy = "pessoa", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<Endereco> enderecos;
+    private List<Address> addresses;
 
 }

@@ -9,13 +9,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class PessoaServlet extends AbstractServlet<People>{
+public class PeopleServlet extends AbstractServlet<People>{
 
     public static final String PATH = "/pessoa";
 
     private final AbstractRepository<People> pessoaRepository = new AbstractRepository<>();
 
-    public PessoaServlet() {
+    public PeopleServlet() {
     }
 
     @Override
@@ -29,7 +29,7 @@ public class PessoaServlet extends AbstractServlet<People>{
 
         resolverEnderecos(people, peopleRequest);
 
-        people.setNome(peopleRequest.getNome());
+        people.setName(peopleRequest.getName());
 
         response.getWriter().write(toJson(pessoaRepository.save(people)));
     }

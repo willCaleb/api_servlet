@@ -1,6 +1,5 @@
 package org.example.entity;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +9,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "endereco_con")
-public class Endereco extends AbstractEntity{
+public class Address extends AbstractEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "id_endereco")
@@ -25,6 +24,6 @@ public class Endereco extends AbstractEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_pessoa", referencedColumnName = "id")
-    private Pessoa pessoa;
+    private People people;
 
 }

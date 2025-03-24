@@ -2,9 +2,7 @@ package org.example.servlets;
 
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.example.Constants.Constants;
 import org.example.Utils.PackageScanner;
-import org.example.entity.Pessoa;
 import org.example.server.servlets.ServletRegister;
 
 import java.util.List;
@@ -17,16 +15,18 @@ public class ServletsInitializer {
     public static void initializeServlets() {
 
 
-        List<Class<? extends AbstractServlet>> classesInPackage = PackageScanner.getClassesInPackage(PessoaServlet.class.getPackage().getName());
+        List<Class<? extends AbstractServlet>> classesInPackage = PackageScanner.getClassesInPackage(PeopleServlet.class.getPackage().getName());
 
         classesInPackage.forEach(clazz -> {
             try {
                 String path = AbstractServlet.getPath(clazz);
 
-                servletRegister.register(clazz.getDeclaredConstructor().newInstance(), path);
-                servletRegister.register(clazz.getDeclaredConstructor().newInstance(), path + "/*");
-            }catch (Exception e) {
+                AbstractServlet abstractServlet = clazz.getDeclaredConstructor().newInstance();
 
+                servletRegister.register(abstractServlet, path);
+                servletRegister.register(abstractServlet, path + "/*");
+            }catch (Exception e) {
+                throw new RuntimeException("Erro ao configurar servlet: " + e.getMessage());
             }
         });
 

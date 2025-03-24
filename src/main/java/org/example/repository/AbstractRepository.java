@@ -7,14 +7,15 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import javax.persistence.Table;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
 public class AbstractRepository<ENTITY extends AbstractEntity> {
 
-    private final Class<ENTITY> entityClass;
-
-
-    public AbstractRepository(Class<ENTITY> entityClass) {
-        this.entityClass = entityClass;
+    @SuppressWarnings("unchecked")
+    public Class<ENTITY> getEntityClass() {
+        Type[] genericTypes = ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments();
+        return (Class<ENTITY>) genericTypes[0];
     }
 
     public ENTITY save(ENTITY entity) {
@@ -29,7 +30,7 @@ public class AbstractRepository<ENTITY extends AbstractEntity> {
 
         session.close();
 
-        return entityClass.cast(saved);
+        return getEntityClass().cast(saved);
     }
 
 
@@ -43,7 +44,7 @@ public class AbstractRepository<ENTITY extends AbstractEntity> {
 
         session.beginTransaction();
 
-        Query<ENTITY> query = session.createNativeQuery(sql, this.entityClass);
+        Query<ENTITY> query = session.createNativeQuery(sql, getEntityClass());
 
         ENTITY singleResult = query.getSingleResult();
 
@@ -53,6 +54,8 @@ public class AbstractRepository<ENTITY extends AbstractEntity> {
     }
 
     private String getTableName() {
+
+        Class<ENTITY> entityClass = getEntityClass();
 
         if (entityClass.isAnnotationPresent(Table.class)) {
             return entityClass.getAnnotation(Table.class).name();

@@ -1,6 +1,5 @@
 package org.example.hibernate;
 
-import org.example.entity.Pessoa;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
