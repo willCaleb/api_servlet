@@ -1,8 +1,7 @@
 package org.example.servlets;
 
-import org.example.Utils.GsonBuilder;
 import org.example.Utils.Utils;
-import org.example.entity.Pessoa;
+import org.example.entity.People;
 import org.example.repository.AbstractRepository;
 
 import javax.servlet.ServletException;
@@ -10,11 +9,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class PessoaServlet extends AbstractServlet{
+public class PessoaServlet extends AbstractServlet<People>{
 
     public static final String PATH = "/pessoa";
 
-    private AbstractRepository<Pessoa> pessoaRepository = new AbstractRepository<>(Pessoa.class);
+    private final AbstractRepository<People> pessoaRepository = new AbstractRepository<>();
 
     public PessoaServlet() {
     }
@@ -24,23 +23,22 @@ public class PessoaServlet extends AbstractServlet{
 
         setConfigs(response);
 
-        Pessoa pessoaRequest = (Pessoa) GsonBuilder.toEntityFromRequest(request, Pessoa.class);
+        People peopleRequest = toEntityFromRequest(request);
 
-        Pessoa pessoa = new Pessoa();
+        People people = new People();
 
-        resolverEnderecos(pessoa, pessoaRequest);
+        resolverEnderecos(people, peopleRequest);
 
-        pessoa.setNome(pessoaRequest.getNome());
+        people.setNome(peopleRequest.getNome());
 
-        response.getWriter().write(pessoaRepository.save(pessoa).toJson());
+        response.getWriter().write(toJson(pessoaRepository.save(people)));
     }
 
-    private void resolverEnderecos(Pessoa pessoa, Pessoa pessoaRequest) {
-        if(Utils.isNotEmpty(pessoaRequest.getEnderecos())) {
-            pessoa.setEnderecos(pessoaRequest.getEnderecos());
+    private void resolverEnderecos(People people, People peopleRequest) {
+        if(Utils.isNotEmpty(peopleRequest.getAddresses())) {
+            people.setAddresses(peopleRequest.getAddresses());
         }
     }
-
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -49,7 +47,7 @@ public class PessoaServlet extends AbstractServlet{
 
         int id = getId(request);
 
-        response.getWriter().write(pessoaRepository.findById(id).toJson());
+        response.getWriter().write(toJson(pessoaRepository.findById(id)));
     }
 
     private static int getId(HttpServletRequest request) {
@@ -59,6 +57,4 @@ public class PessoaServlet extends AbstractServlet{
 
         return Integer.parseInt(stringId);
     }
-
-
 }
