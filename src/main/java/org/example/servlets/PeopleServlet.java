@@ -1,7 +1,10 @@
 package org.example.servlets;
 
 import org.example.Utils.Utils;
-import org.example.entity.People;
+import org.example.converter.Converter;
+import org.example.model.dto.PeopleDTO;
+import org.example.model.entity.Address;
+import org.example.model.entity.People;
 import org.example.repository.AbstractRepository;
 
 import javax.servlet.ServletException;
@@ -11,9 +14,9 @@ import java.io.IOException;
 
 public class PeopleServlet extends AbstractServlet<People>{
 
-    public static final String PATH = "/pessoa";
+    public static final String PATH = "/people";
 
-    private final AbstractRepository<People> pessoaRepository = new AbstractRepository<>();
+    private final AbstractRepository<People> pessoaRepository = new AbstractRepository<>(People.class);
 
     public PeopleServlet() {
     }
@@ -31,11 +34,16 @@ public class PeopleServlet extends AbstractServlet<People>{
 
         people.setName(peopleRequest.getName());
 
-        response.getWriter().write(toJson(pessoaRepository.save(people)));
+        People save = pessoaRepository.save(people);
+
+        response.getWriter().write(toJson(Converter.toDto(save, PeopleDTO.class)));
     }
 
     private void resolverEnderecos(People people, People peopleRequest) {
-        if(Utils.isNotEmpty(peopleRequest.getAddresses())) {
+        if (Utils.isNotEmpty(peopleRequest.getAddresses())) {
+            for (Address address : peopleRequest.getAddresses()) {
+                address.setPeople(people);
+            }
             people.setAddresses(peopleRequest.getAddresses());
         }
     }
@@ -47,14 +55,10 @@ public class PeopleServlet extends AbstractServlet<People>{
 
         int id = getId(request);
 
-        response.getWriter().write(toJson(pessoaRepository.findById(id)));
-    }
+        People people = pessoaRepository.findById(id);
 
-    private static int getId(HttpServletRequest request) {
-        String pathInfo = request.getPathInfo();
+        PeopleDTO dto = Converter.toDto(people, PeopleDTO.class);
 
-        String stringId = pathInfo.substring(1);
-
-        return Integer.parseInt(stringId);
+        response.getWriter().write(toJson(dto));
     }
 }

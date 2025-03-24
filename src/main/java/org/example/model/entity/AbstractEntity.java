@@ -1,4 +1,4 @@
-package org.example.entity;
+package org.example.model.entity;
 
 public abstract class AbstractEntity implements IIdentifier{
 

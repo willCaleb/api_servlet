@@ -1,5 +1,6 @@
 package org.example.hibernate;
 
+import org.example.model.entity.People;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
@@ -20,7 +21,7 @@ public class HibernateUtil {
 
             MetadataSources metadataSources = new MetadataSources(registry);
 
-            Reflections reflections = new Reflections("org.example.entity");
+            Reflections reflections = new Reflections(People.class.getPackage().getName());
 
             Set<Class<?>> entityClasses = reflections.getTypesAnnotatedWith(Entity.class);
 

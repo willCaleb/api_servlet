@@ -2,6 +2,7 @@ package org.example.Utils;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
+import org.example.IgnoreField;
 
 public class IgnoreFieldExclusionStrategy implements ExclusionStrategy {
     @Override

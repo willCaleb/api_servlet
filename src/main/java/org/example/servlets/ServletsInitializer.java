@@ -21,15 +21,12 @@ public class ServletsInitializer {
             try {
                 String path = AbstractServlet.getPath(clazz);
 
-                AbstractServlet abstractServlet = clazz.getDeclaredConstructor().newInstance();
-
-                servletRegister.register(abstractServlet, path);
-                servletRegister.register(abstractServlet, path + "/*");
+                servletRegister.register(clazz.getDeclaredConstructor().newInstance(), path);
+                servletRegister.register(clazz.getDeclaredConstructor().newInstance(), path + "/*");
             }catch (Exception e) {
                 throw new RuntimeException("Erro ao configurar servlet: " + e.getMessage());
             }
         });
-
         servletRegister.getServlets().forEach((s, i) -> {
             System.out.println("Servlet: " + s);
             System.out.println("Path: " + i);

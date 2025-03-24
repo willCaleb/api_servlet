@@ -1,4 +1,6 @@
 package org.example.model.dto;
 
-public class AbstractDTO {
+import java.io.Serializable;
+
+public class AbstractDTO implements Serializable {
 }

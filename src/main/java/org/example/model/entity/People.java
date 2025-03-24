@@ -1,4 +1,4 @@
-package org.example.entity;
+package org.example.model.entity;
 
 
 import lombok.Getter;
@@ -21,7 +21,7 @@ public class People extends AbstractEntity{
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "people", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "people", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Address> addresses;
 
 }

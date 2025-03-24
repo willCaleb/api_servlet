@@ -1,21 +1,21 @@
 package org.example.repository;
 
-import org.example.entity.AbstractEntity;
+import org.example.model.entity.AbstractEntity;
 import org.example.hibernate.HibernateUtil;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import javax.persistence.Table;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import javax.transaction.Transactional;
 
 public class AbstractRepository<ENTITY extends AbstractEntity> {
 
-    @SuppressWarnings("unchecked")
-    public Class<ENTITY> getEntityClass() {
-        Type[] genericTypes = ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments();
-        return (Class<ENTITY>) genericTypes[0];
+    private final Class<ENTITY> entityClass;
+
+    public AbstractRepository(Class<ENTITY> entityClass) {
+        this.entityClass = entityClass;
     }
 
     public ENTITY save(ENTITY entity) {
@@ -30,32 +30,38 @@ public class AbstractRepository<ENTITY extends AbstractEntity> {
 
         session.close();
 
-        return getEntityClass().cast(saved);
+        return entityClass.cast(saved);
     }
 
 
+    @Transactional
     public ENTITY findById(Integer id) {
-
         String tableName = getTableName();
-
         String sql = "select * from " + tableName + " where id = " + id;
 
         Session session = HibernateUtil.getSessionFactory().openSession();
-
         session.beginTransaction();
 
-        Query<ENTITY> query = session.createNativeQuery(sql, getEntityClass());
-
+        Query<ENTITY> query = session.createNativeQuery(sql, entityClass);
         ENTITY singleResult = query.getSingleResult();
 
         session.close();
 
+        initializeLazyCollections(singleResult);
+
         return singleResult;
     }
 
-    private String getTableName() {
+    private void initializeLazyCollections(ENTITY entity) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            session.beginTransaction();
+            session.merge(entity);
+            Hibernate.initialize(entity);
+            session.getTransaction().commit();
+        }
+    }
 
-        Class<ENTITY> entityClass = getEntityClass();
+    private String getTableName() {
 
         if (entityClass.isAnnotationPresent(Table.class)) {
             return entityClass.getAnnotation(Table.class).name();

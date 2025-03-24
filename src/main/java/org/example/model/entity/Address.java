@@ -1,4 +1,4 @@
-package org.example.entity;
+package org.example.model.entity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +23,6 @@ public class Address extends AbstractEntity{
 
     private String complementaryInformation;
 
-    @IgnoreField
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_pessoa", referencedColumnName = "id")
     private People people;

@@ -2,7 +2,7 @@ package org.example.Utils;
 
 import com.google.gson.Gson;
 import com.google.gson.Strictness;
-import org.example.entity.AbstractEntity;
+import org.example.model.entity.AbstractEntity;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Modifier;
@@ -13,6 +13,7 @@ public class GsonBuilder {
         return new com.google.gson.GsonBuilder()
                 .disableHtmlEscaping()
                 .excludeFieldsWithModifiers(Modifier.STATIC, Modifier.TRANSIENT, Modifier.FINAL)
+                .setExclusionStrategies(new IgnoreFieldExclusionStrategy())
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
                 .setStrictness(Strictness.LENIENT)
                 .create();

@@ -16,13 +16,14 @@ public class JettyInitializer {
         ServletContextHandler context = ServletsInitializer.getContext();
 
         CustomErrorHandler customErrorHandler = new CustomErrorHandler();
+
         context.setErrorHandler(customErrorHandler);
 
         HandlerCollection handlers = new HandlerCollection();
+
         handlers.addHandler(context);
 
         server.setHandler(handlers);
-
 
         init(server);
     }

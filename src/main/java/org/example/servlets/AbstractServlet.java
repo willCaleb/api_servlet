@@ -2,7 +2,7 @@ package org.example.servlets;
 
 import org.example.Constants.Constants;
 import org.example.Utils.GsonBuilder;
-import org.example.entity.AbstractEntity;
+import org.example.model.entity.AbstractEntity;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,18 +14,14 @@ import java.lang.reflect.Type;
 public abstract class AbstractServlet<E extends AbstractEntity> extends HttpServlet {
 
     public static String getPath(Class<? extends AbstractServlet> clazz) {
-
-        String path;
         try {
             Field field = clazz.getDeclaredField(Constants.PATH);
             field.setAccessible(Boolean.TRUE);
-            path = (String)field.get(null);
+            return  (String)field.get(null);
 
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException("A classe " + clazz.getName() + " não tem um path: " + e.getMessage());
         }
-
-        return path;
     }
 
     @SuppressWarnings("unchecked")
@@ -46,6 +42,18 @@ public abstract class AbstractServlet<E extends AbstractEntity> extends HttpServ
 
     public String toJson(Object object) {
         return GsonBuilder.getGjon().toJson(object);
+    }
+
+    public Integer getId(HttpServletRequest request) {
+        try {
+            String pathInfo = request.getPathInfo();
+
+            String stringId = pathInfo.substring(1);
+
+            return Integer.parseInt(stringId);
+        }catch (Exception e) {
+            throw new RuntimeException("Erro ao obter id: " + e.getMessage());
+        }
     }
 }
 
