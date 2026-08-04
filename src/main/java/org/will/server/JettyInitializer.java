@@ -3,6 +3,7 @@ package org.will.server;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.will.Constants.Constants;
 import org.will.exception.CustomErrorHandler;
 import org.will.servlets.ServletsInitializer;
 
@@ -19,7 +20,7 @@ public class JettyInitializer {
 
         context.setErrorHandler(customErrorHandler);
 
-        context.setInitParameter("org.eclipse.jetty.servlet.Default.charset", "UTF-8");
+        context.setInitParameter(Constants.JETTY_SERVLET_DEFAULT_CHARSET, "UTF-8");
 
         HandlerCollection handlers = new HandlerCollection();
 

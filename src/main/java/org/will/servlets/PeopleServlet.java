@@ -5,7 +5,8 @@ import org.will.annotation.RequestMapping;
 import org.will.converter.Converter;
 import org.will.model.dto.PeopleDTO;
 import org.will.model.entity.Address;
-import org.will.model.entity.People;
+import org.will.model.entity.Person;
+import org.will.repository.AbstractRepository;
 import org.will.repository.impl.AbstractRepositoryImpl;
 
 import javax.servlet.ServletException;
@@ -14,9 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RequestMapping(path = "/people")
-public class PeopleServlet extends AbstractServlet<People, PeopleDTO>{
+public class PeopleServlet extends AbstractServlet<Person, PeopleDTO>{
 
-    private final AbstractRepositoryImpl<People> pessoaRepository = new AbstractRepositoryImpl<>(People.class);
+    private final AbstractRepository<Person> pessoaRepository = new AbstractRepositoryImpl<>(Person.class);
 
     public PeopleServlet() {
     }
@@ -24,21 +25,21 @@ public class PeopleServlet extends AbstractServlet<People, PeopleDTO>{
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        People people = Converter.toEntity(fromRequestToDTO(request), People.class);
+        Person person = Converter.toEntity(fromRequestToDTO(request), Person.class);
 
-        resolverEnderecos(people, people);
+        resolverEnderecos(person);
 
-        People save = pessoaRepository.save(people);
+        Person save = pessoaRepository.save(person);
 
         write(response, save);
     }
 
-    private void resolverEnderecos(People people, People peopleRequest) {
-        if (Utils.isNotEmpty(peopleRequest.getAddresses())) {
-            for (Address address : peopleRequest.getAddresses()) {
-                address.setPeople(people);
+    private void resolverEnderecos(Person person) {
+        if (Utils.isNotEmpty(person.getAddresses())) {
+            for (Address address : person.getAddresses()) {
+                address.setPerson(person);
             }
-            people.setAddresses(peopleRequest.getAddresses());
+            person.setAddresses(person.getAddresses());
         }
     }
 
@@ -46,8 +47,8 @@ public class PeopleServlet extends AbstractServlet<People, PeopleDTO>{
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id = getId(request);
 
-        People people = pessoaRepository.findById(id);
+        Person person = pessoaRepository.findById(id);
 
-        write(response, people);
+        write(response, person);
     }
 }

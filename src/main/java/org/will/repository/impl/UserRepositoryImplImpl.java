@@ -8,7 +8,7 @@ import org.will.repository.UserRepository;
 
 import java.util.Optional;
 
-public class UserRepositoryImplImpl extends AbstractRepositoryImpl<User> implements UserRepository{
+public class UserRepositoryImplImpl extends AbstractRepositoryImpl<User> implements UserRepository {
 
     public UserRepositoryImplImpl(Class<User> userClass) {
         super(userClass);
@@ -17,7 +17,8 @@ public class UserRepositoryImplImpl extends AbstractRepositoryImpl<User> impleme
     @Override
     public Optional<User> findByUsername(String username) {
 
-        String sql = "select * from usuario_servlet where username = :username";;
+        String sql = "select * from usuario_servlet where username = :username";
+        ;
 
         Session session = HibernateUtil.getSessionFactory().openSession();
 
@@ -30,14 +31,13 @@ public class UserRepositoryImplImpl extends AbstractRepositoryImpl<User> impleme
         Optional<User> userOptional;
 
         try {
-             userOptional = Optional.of(query.getSingleResult());
-        }catch (Exception ignored) {
+            userOptional = Optional.of(query.getSingleResult());
+            return userOptional;
+        } catch (Exception ignored) {
             return Optional.empty();
+        } finally {
+            session.close();
         }
-
-        session.close();
-
-        return userOptional;
     }
 
 }

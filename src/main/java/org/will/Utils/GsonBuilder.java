@@ -37,8 +37,7 @@ public class GsonBuilder {
         while ((line = request.getReader().readLine()) != null) {
             jsonBuilder.append(line);
         }
-        String jsonRequest = jsonBuilder.toString();
-        return jsonRequest;
+        return jsonBuilder.toString();
     }
 
     public static <DTO extends AbstractDTO> DTO fromRequestToDTO(HttpServletRequest request, Class<DTO> dtoClass) {

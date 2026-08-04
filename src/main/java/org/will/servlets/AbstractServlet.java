@@ -1,7 +1,6 @@
 package org.will.servlets;
 
 import org.will.Utils.GsonBuilder;
-import org.will.Utils.Utils;
 import org.will.converter.Converter;
 import org.will.model.dto.AbstractDTO;
 import org.will.model.entity.AbstractEntity;
@@ -36,14 +35,18 @@ public abstract class AbstractServlet<E extends AbstractEntity, DTO extends Abst
 
     @SuppressWarnings("unchecked")
     public Class<E> getEntityClass() {
-        Type[] genericTypes = ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments();
+        Type[] genericTypes = getTypes();
         return (Class<E>) genericTypes[0];
     }
 
     @SuppressWarnings("unchecked")
     public Class<DTO> getDTOClass() {
-        Type[] genericTypes = ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments();
+        Type[] genericTypes = getTypes();
         return (Class<DTO>) genericTypes[1];
+    }
+
+    private Type[] getTypes() {
+        return  ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments();
     }
 
     public static void setConfigs(HttpServletResponse response) {

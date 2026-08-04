@@ -1,13 +1,13 @@
 package org.will.hibernate;
 
-import org.will.model.entity.People;
+import org.will.model.entity.Person;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.reflections.Reflections;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 import java.util.Set;
 
 public class HibernateUtil {
@@ -21,7 +21,7 @@ public class HibernateUtil {
 
             MetadataSources metadataSources = new MetadataSources(registry);
 
-            Reflections reflections = new Reflections(People.class.getPackage().getName());
+            Reflections reflections = new Reflections(Person.class.getPackage().getName());
 
             Set<Class<?>> entityClasses = reflections.getTypesAnnotatedWith(Entity.class);
 

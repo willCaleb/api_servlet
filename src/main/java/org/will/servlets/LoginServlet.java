@@ -9,10 +9,8 @@ import org.will.model.entity.User;
 import org.will.repository.UserRepository;
 import org.will.repository.impl.UserRepositoryImplImpl;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @RequestMapping(path = "/login")
 public class LoginServlet extends AbstractServlet<User, UserDTO>{
@@ -20,7 +18,7 @@ public class LoginServlet extends AbstractServlet<User, UserDTO>{
     private final UserRepository userRepository = new UserRepositoryImplImpl(User.class);
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         User user = Converter.toEntity(fromRequestToDTO(request), User.class);
 
         User userManaged = userRepository.findByUsername(user.getUsername()).orElseThrow(() -> new RuntimeException("Usuario nao encontrado"));

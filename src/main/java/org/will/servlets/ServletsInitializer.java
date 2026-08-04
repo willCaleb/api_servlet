@@ -18,17 +18,19 @@ public class ServletsInitializer {
     static ServletRegister servletRegister = new ServletRegister();
 
     public static void initializeServlets() {
+//        List<Class<? extends AbstractServlet>> classesInPackage = PackageScanner
+//                .getAbstractServletClassesInPackage(PeopleServlet.class.getPackage().getName());
+
+        List<Class<? extends AbstractServlet>> servlets = PackageScanner.getAbstractServletClassesInPackage();
 
 
-        List<Class<? extends AbstractServlet>> classesInPackage = PackageScanner.getAbstractServletClassesInPackage(PeopleServlet.class.getPackage().getName());
-
-        classesInPackage.forEach(clazz -> {
+        servlets.forEach(clazz -> {
             try {
                 String path = clazz.getAnnotation(RequestMapping.class).path();
 
                 servletRegister.register(clazz.getDeclaredConstructor().newInstance(), path);
                 servletRegister.register(clazz.getDeclaredConstructor().newInstance(), path + "/*");
-            }catch (Exception e) {
+            } catch (Exception e) {
                 throw new RuntimeException("Erro ao configurar servlet: " + e.getMessage());
             }
         });
@@ -49,7 +51,7 @@ public class ServletsInitializer {
 
         context.addFilter(filterHolder, "/secure", EnumSet.of(DispatcherType.REQUEST));
 
-        servlets.forEach((servlet, path)  -> {
+        servlets.forEach((servlet, path) -> {
             ServletHolder holder = new ServletHolder(servlet);
             context.addServlet(holder, path);
         });

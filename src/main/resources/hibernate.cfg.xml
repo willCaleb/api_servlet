@@ -4,9 +4,9 @@
 <hibernate-configuration>
     <session-factory>
         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5433/postgres</property>
-        <property name="hibernate.connection.username">taskmanager</property>
-        <property name="hibernate.connection.password">correta</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5435/business</property>
+        <property name="hibernate.connection.username">wilson.caleb</property>
+        <property name="hibernate.connection.password">L1v1a_m41406</property>
 
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
 

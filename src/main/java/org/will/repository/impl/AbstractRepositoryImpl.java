@@ -8,8 +8,8 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.will.repository.AbstractRepository;
 
-import javax.persistence.Table;
-import javax.transaction.Transactional;
+import jakarta.persistence.Table;
+import jakarta.transaction.Transactional;
 import java.util.List;
 
 public class AbstractRepositoryImpl<ENTITY extends AbstractEntity> implements AbstractRepository<ENTITY> {
@@ -23,16 +23,13 @@ public class AbstractRepositoryImpl<ENTITY extends AbstractEntity> implements Ab
     @Transactional
     public ENTITY save(ENTITY entity) {
 
-        try {
-            Session session = HibernateUtil.getSessionFactory().openSession();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()){
 
             Transaction transaction = session.beginTransaction();
 
             Object saved = session.merge(entity);
 
             transaction.commit();
-
-            session.close();
 
             return entityClass.cast(saved);
         }catch (Exception e) {
@@ -43,43 +40,41 @@ public class AbstractRepositoryImpl<ENTITY extends AbstractEntity> implements Ab
     @Transactional
     public ENTITY findById(Integer id) {
 
-        try {
-            String tableName = getTableName();
-            String sql = "select * from " + tableName + " where id = " + id;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()){
+            String sql = "select * from " + getTableName() + " where id = " + id;
 
-            Session session = HibernateUtil.getSessionFactory().openSession();
             session.beginTransaction();
 
             Query<ENTITY> query = session.createNativeQuery(sql, entityClass);
 
             ENTITY singleResult = query.getSingleResult();
 
-            session.close();
-
             initializeLazyCollections(singleResult);
 
             return singleResult;
         } catch (Exception e) {
-            throw new RuntimeException("Não foi encontrado registro com o id " + id);
+            throw new RuntimeException("Não foi encontrado registro de " + entityClass.getSimpleName() + " com o id " + id);
         }
     }
 
     @Override
     public List<ENTITY> findAll() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 
-        Session session = HibernateUtil.getSessionFactory().openSession();
+            session.beginTransaction();
 
-        session.beginTransaction();
+            String sql = "SELECT * FROM " + getTableName();
 
-        String sql = "SELECT * FROM " + getTableName();
+            Query<ENTITY> query = session.createNativeQuery(sql, entityClass);
 
-        Query<ENTITY> query = session.createNativeQuery(sql, entityClass);
+            List<ENTITY> resultList = query.getResultList();
 
-        List<ENTITY> resultList = query.getResultList();
+            session.close();
 
-        session.close();
-
-        return resultList;
+            return resultList;
+        }catch (Exception ex) {
+            throw new RuntimeException("Falha ao retornar lista de " + entityClass.getSimpleName());
+        }
     }
 
     @Override
