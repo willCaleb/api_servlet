@@ -4,14 +4,14 @@ package org.will.model.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "people")
-public class People extends AbstractEntity{
+public class Person extends AbstractEntity{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "id_pessoa")
@@ -21,7 +21,7 @@ public class People extends AbstractEntity{
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "people", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "person", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Address> addresses;
 
 }

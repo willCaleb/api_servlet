@@ -1,7 +1,9 @@
 package org.will.Utils;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.Strictness;
+import org.will.exception.CustomException;
 import org.will.model.dto.AbstractDTO;
 import org.will.model.entity.AbstractEntity;
 
@@ -9,10 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 
-public class GsonBuilder {
+public class CustomGsonBuilder {
 
     public static Gson getGjon() {
-        return new com.google.gson.GsonBuilder()
+        return new GsonBuilder()
                 .disableHtmlEscaping()
                 .excludeFieldsWithModifiers(Modifier.STATIC, Modifier.TRANSIENT, Modifier.FINAL)
                 .setExclusionStrategies(new IgnoreFieldExclusionStrategy())
@@ -27,7 +29,7 @@ public class GsonBuilder {
 
             return getGjon().fromJson(jsonRequest, clazz);
         }catch (Exception e) {
-            throw new RuntimeException("Não foi possível realizar a operação: " + e.getMessage());
+            throw new CustomException("Não foi possível realizar a operação: " + e.getMessage());
         }
     }
 
@@ -37,8 +39,7 @@ public class GsonBuilder {
         while ((line = request.getReader().readLine()) != null) {
             jsonBuilder.append(line);
         }
-        String jsonRequest = jsonBuilder.toString();
-        return jsonRequest;
+        return jsonBuilder.toString();
     }
 
     public static <DTO extends AbstractDTO> DTO fromRequestToDTO(HttpServletRequest request, Class<DTO> dtoClass) {
@@ -47,7 +48,7 @@ public class GsonBuilder {
 
             return getGjon().fromJson(jsonString, dtoClass);
         }catch (Exception e) {
-            throw new RuntimeException("Não foi possível realizar a operação: " + e.getMessage());
+            throw new CustomException("Não foi possível realizar a operação: " + e.getMessage());
         }
     }
 }

@@ -2,6 +2,7 @@ package org.will.servlets;
 
 import org.will.Utils.PasswordUtils;
 import org.will.Utils.Utils;
+import org.will.annotation.NoAuth;
 import org.will.annotation.RequestMapping;
 import org.will.converter.Converter;
 import org.will.model.dto.UserDTO;
@@ -21,6 +22,7 @@ public class UserServlet extends AbstractServlet<User, UserDTO>{
 
     private final UserRepository userRepository = new UserRepositoryImplImpl(User.class);
 
+    @NoAuth
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 

@@ -1,6 +1,7 @@
 package org.will.validator;
 
 import org.will.Utils.StringUtils;
+import org.will.exception.CustomException;
 import org.will.model.EnumException;
 import org.will.model.entity.User;
 import org.will.repository.UserRepository;
@@ -10,7 +11,7 @@ public class UserValidator {
 
     public static void validateRequiredFields(User user) {
         if (StringUtils.isEmpty(user.getUsername()) || StringUtils.isEmpty(user.getPassword())) {
-            throw new RuntimeException(EnumException.USER_MANDATORY_USERNAME_PASSWORD.getValue());
+            throw new CustomException(EnumException.USER_MANDATORY_USERNAME_PASSWORD);
         }
     }
 
@@ -23,7 +24,7 @@ public class UserValidator {
         UserRepository userRepository = new UserRepositoryImplImpl(User.class);
 
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            throw new RuntimeException(EnumException.USER_NAME_EXISTS.getValue());
+            throw new CustomException(EnumException.USER_NAME_EXISTS);
         }
     }
 }
