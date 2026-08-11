@@ -1,5 +1,7 @@
 package org.will.repository.impl;
 
+import org.will.exception.CustomException;
+import org.will.model.EnumException;
 import org.will.model.entity.AbstractEntity;
 import org.will.hibernate.HibernateUtil;
 import org.hibernate.Hibernate;
@@ -33,7 +35,7 @@ public class AbstractRepositoryImpl<ENTITY extends AbstractEntity> implements Ab
 
             return entityClass.cast(saved);
         }catch (Exception e) {
-            throw new RuntimeException("Não foi possível incluir os dados.");
+            throw new CustomException(EnumException.SAVE_ERROR);
         }
     }
 
@@ -53,7 +55,7 @@ public class AbstractRepositoryImpl<ENTITY extends AbstractEntity> implements Ab
 
             return singleResult;
         } catch (Exception e) {
-            throw new RuntimeException("Não foi encontrado registro de " + entityClass.getSimpleName() + " com o id " + id);
+            throw new CustomException("Não foi encontrado registro de " + entityClass.getSimpleName() + " com o id " + id);
         }
     }
 
@@ -73,7 +75,7 @@ public class AbstractRepositoryImpl<ENTITY extends AbstractEntity> implements Ab
 
             return resultList;
         }catch (Exception ex) {
-            throw new RuntimeException("Falha ao retornar lista de " + entityClass.getSimpleName());
+            throw new CustomException("Falha ao retornar lista de " + entityClass.getSimpleName());
         }
     }
 

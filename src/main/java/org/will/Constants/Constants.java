@@ -6,4 +6,18 @@ public class Constants {
 
     public static final String JETTY_SERVLET_DEFAULT_CHARSET = "org.eclipse.jetty.servlet.Default.charset";
 
+    public static final String HTTP_HEADER_AUTHORIZATION = "Authorization";
+
+    public static final String HTTP_HEADER_BEARER = "Bearer ";
+
+    public static final String HTTP_HEADER_CONTENT_TYPE = "application/json";
+
+    public static final String HTTP_HEADER_CHARACTER_ENCODING = "UTF-8";
+
+    public static final String NOT_AUTHORIZED = """
+                        {
+                            "error": "Não autorizado"
+                        }
+                        """;
+
 }

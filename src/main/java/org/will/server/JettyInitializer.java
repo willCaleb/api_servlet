@@ -4,23 +4,26 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.will.Constants.Constants;
+import org.will.config.LogConfig;
 import org.will.exception.CustomErrorHandler;
+import org.will.exception.CustomException;
 import org.will.servlets.ServletsInitializer;
 
 public class JettyInitializer {
 
     public static void start() {
+
+        LogConfig.configure();
+
         Server server = new Server(7272);
 
         ServletsInitializer.initializeServlets();
 
         ServletContextHandler context = ServletsInitializer.getContext();
 
-        CustomErrorHandler customErrorHandler = new CustomErrorHandler();
+        context.setErrorHandler(new CustomErrorHandler());
 
-        context.setErrorHandler(customErrorHandler);
-
-        context.setInitParameter(Constants.JETTY_SERVLET_DEFAULT_CHARSET, "UTF-8");
+        context.setInitParameter(Constants.JETTY_SERVLET_DEFAULT_CHARSET, Constants.HTTP_HEADER_CHARACTER_ENCODING);
 
         HandlerCollection handlers = new HandlerCollection();
 
@@ -36,7 +39,7 @@ public class JettyInitializer {
             server.start();
             server.join();
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new CustomException(e.getMessage());
         }
     }
 }

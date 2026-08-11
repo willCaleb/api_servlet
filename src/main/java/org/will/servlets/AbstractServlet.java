@@ -1,6 +1,7 @@
 package org.will.servlets;
 
-import org.will.Utils.GsonBuilder;
+import org.will.Constants.Constants;
+import org.will.Utils.CustomGsonBuilder;
 import org.will.converter.Converter;
 import org.will.model.dto.AbstractDTO;
 import org.will.model.entity.AbstractEntity;
@@ -20,17 +21,22 @@ public abstract class AbstractServlet<E extends AbstractEntity, DTO extends Abst
         response.getWriter().write(toJson(Converter.toDto(entity, getDTOClass())));
     }
 
+    public void writeBean(HttpServletResponse response, Object bean) throws IOException{
+        setConfigs(response);
+        response.getWriter().write(toJson(bean));
+    }
+
     public void write(HttpServletResponse response, List<E> entityList) throws IOException {
         setConfigs(response);
         response.getWriter().write(toJson(Converter.toDto(entityList, getDTOClass())));
     }
 
     public E toEntityFromRequest(HttpServletRequest request) {
-        return (E) GsonBuilder.toEntityFromRequest(request, getEntityClass());
+        return (E) CustomGsonBuilder.toEntityFromRequest(request, getEntityClass());
     }
 
     public DTO fromRequestToDTO(HttpServletRequest request) {
-        return GsonBuilder.fromRequestToDTO(request, getDTOClass());
+        return CustomGsonBuilder.fromRequestToDTO(request, getDTOClass());
     }
 
     @SuppressWarnings("unchecked")
@@ -50,12 +56,12 @@ public abstract class AbstractServlet<E extends AbstractEntity, DTO extends Abst
     }
 
     public static void setConfigs(HttpServletResponse response) {
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
+        response.setContentType(Constants.HTTP_HEADER_CONTENT_TYPE);
+        response.setCharacterEncoding(Constants.HTTP_HEADER_CHARACTER_ENCODING);
     }
 
     public String toJson(Object object) {
-        return GsonBuilder.getGjon().toJson(object);
+        return CustomGsonBuilder.getGjon().toJson(object);
     }
 
     public Integer getId(HttpServletRequest request) {

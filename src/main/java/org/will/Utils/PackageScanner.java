@@ -15,12 +15,10 @@ public class PackageScanner {
 
         Reflections reflections = new Reflections(ServletApi.class.getPackage().getName());
 
-        List<Class<? extends AbstractServlet>> list = reflections.getSubTypesOf(AbstractServlet.class)
+        return reflections.getSubTypesOf(AbstractServlet.class)
                 .stream()
                 .filter(clazz -> clazz.isAnnotationPresent(RequestMapping.class))
                 .collect(Collectors.toList());
-
-        return list;
 
     }
 }

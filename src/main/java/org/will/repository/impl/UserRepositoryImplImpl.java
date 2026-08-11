@@ -18,25 +18,18 @@ public class UserRepositoryImplImpl extends AbstractRepositoryImpl<User> impleme
     public Optional<User> findByUsername(String username) {
 
         String sql = "select * from usuario_servlet where username = :username";
-        ;
 
-        Session session = HibernateUtil.getSessionFactory().openSession();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 
-        session.beginTransaction();
+            session.beginTransaction();
 
-        Query<User> query = session.createNativeQuery(sql, User.class);
+            Query<User> query = session.createNativeQuery(sql, User.class);
 
-        query.setParameter("username", username);
+            query.setParameter("username", username);
 
-        Optional<User> userOptional;
-
-        try {
-            userOptional = Optional.of(query.getSingleResult());
-            return userOptional;
+            return Optional.of(query.getSingleResult());
         } catch (Exception ignored) {
             return Optional.empty();
-        } finally {
-            session.close();
         }
     }
 
