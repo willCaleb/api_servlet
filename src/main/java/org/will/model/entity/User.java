@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import jakarta.persistence.*;
+import org.will.auth.Role;
 
 @Entity
 @Getter
@@ -19,5 +20,9 @@ public class User extends AbstractEntity {
     private String username;
 
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private Role role;
 
 }

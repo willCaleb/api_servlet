@@ -5,7 +5,6 @@ import org.will.Utils.StringUtils;
 import org.will.annotation.NoAuth;
 import org.will.annotation.RequestMapping;
 import org.will.auth.JwtUtils;
-import org.will.context.Context;
 import org.will.converter.Converter;
 import org.will.exception.CustomException;
 import org.will.model.EnumException;
@@ -31,8 +30,6 @@ public class LoginServlet extends AbstractServlet<User, UserDTO>{
         User userManaged = userRepository.findByUsername(user.getUsername()).orElseThrow(() -> new CustomException(EnumException.USER_NOT_FOUND));
 
         validatePassword(user, userManaged);
-
-        Context.setUser(userManaged);
 
         writeBean(response, JwtUtils.getUserLoginBean(userManaged));
     }

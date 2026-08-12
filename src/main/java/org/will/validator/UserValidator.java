@@ -1,6 +1,7 @@
 package org.will.validator;
 
 import org.will.Utils.StringUtils;
+import org.will.Utils.Utils;
 import org.will.exception.CustomException;
 import org.will.model.EnumException;
 import org.will.model.entity.User;
@@ -13,7 +14,11 @@ public class UserValidator {
         if (StringUtils.isEmpty(user.getUsername()) || StringUtils.isEmpty(user.getPassword())) {
             throw new CustomException(EnumException.USER_MANDATORY_USERNAME_PASSWORD);
         }
+        if( Utils.isEmpty(user.getRole())) {
+            throw new CustomException(EnumException.USER_MANDATORY_ROLE);
+        }
     }
+
 
     public static void validateInsert(User user) {
         validateRequiredFields(user);

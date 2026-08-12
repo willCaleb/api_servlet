@@ -17,6 +17,8 @@ public class UserLoginBean {
 
     private Date expiration;
 
+    private String role;
+
     private String token;
 
     @Override
@@ -24,6 +26,7 @@ public class UserLoginBean {
         return "{" +
                 "username: \"" + username + "\"" +
                 ", id: " + id +
+                ", role: " + role +
                 ", expiration: \"" + expiration + "\"" +
                 ", token: \"" + token + "\"" +
                 '}';

@@ -7,19 +7,26 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.will.Constants.Constants;
 import org.will.Utils.StringUtils;
 import org.will.annotation.NoAuth;
+import org.will.annotation.Permission;
+import org.will.auth.JwtUtils;
+import org.will.context.Context;
+import org.will.exception.CustomException;
+import org.will.model.EnumException;
+import org.will.model.entity.User;
+import org.will.repository.UserRepository;
+import org.will.repository.impl.UserRepositoryImplImpl;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.lang.reflect.Method;
 
 @WebFilter("/*")
 public class AuthenticationFilter implements Filter {
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) {
 
         try {
             HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
@@ -41,12 +48,33 @@ public class AuthenticationFilter implements Filter {
                 servletResponse.setCharacterEncoding(Constants.HTTP_HEADER_CHARACTER_ENCODING);
 
                 servletResponse.getWriter().write(Constants.NOT_AUTHORIZED);
+
                 return;
             }
+
+            User contextUser = getContextUser(auth);
+
+            if (method.isAnnotationPresent(Permission.class) && !contextUser.getRole().hasPermission(method.getDeclaredAnnotation(Permission.class).value())) {
+                servletResponse.getWriter().write(Constants.NOT_ALLOWED);
+                return;
+            }
+            Context.setUser(contextUser);
             filterChain.doFilter(servletRequest, servletResponse);
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new CustomException(e.getMessage());
         }
+    }
+
+    private static User getContextUser(String auth) {
+
+        UserRepository userRepository = new UserRepositoryImplImpl(User.class);
+
+        String token = auth.replace("Bearer ", "");
+
+        String usernameFromToken = JwtUtils.getUsernameFromToken(token);
+
+        return userRepository.findByUsername(usernameFromToken).orElseThrow(() -> new CustomException(EnumException.USER_NOT_FOUND));
+
     }
 
     private static String getMethodName(HttpServletRequest httpRequest) {

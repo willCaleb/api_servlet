@@ -10,7 +10,8 @@ public enum EnumException {
     SAVE_ERROR("Não foi possível incluir os dados."),
     LOGIN_PASSWORD_NOT_PROVIDED("Senha é obrigatório"),
     USER_NOT_FOUND("Usuario nao encontrado"),
-    INVALID_CREDENTIALS("Usuario ou senha invalidos");
+    INVALID_CREDENTIALS("Usuario ou senha invalidos"),
+    USER_MANDATORY_ROLE("Permissão é obrigatória");
 
 
     final String value;
