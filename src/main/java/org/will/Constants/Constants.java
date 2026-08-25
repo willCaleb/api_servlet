@@ -1,5 +1,7 @@
 package org.will.Constants;
 
+import java.util.ResourceBundle;
+
 public class Constants {
 
     public static final String PATH = "PATH";
@@ -19,5 +21,14 @@ public class Constants {
                             "error": "Não autorizado"
                         }
                         """;
+    public static final String NOT_ALLOWED = """
+                        {
+                            "error": "O usuário não tem permissão para acessar a funcionalidade"
+                        }
+                        """;
+
+    public static String getSecret() {
+        return ResourceBundle.getBundle("variables").getString("jwt.secret_key");
+    }
 
 }
